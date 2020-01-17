@@ -26,6 +26,7 @@
 <script src="jspsych-6-2/plugins/jspsych-html-keyboard-response.js"></script>
 <script src="jspsychr/jspsychr.js"></script>
 <script src="jspsych-6-2/plugins/jspsych-image-keyboard-response.js"></script>
+<script src="jspsych-6-2/plugins/jspsych-html-button-response.js"></script>
 <script src="jspsych-6-2/plugins/jspsych-fullscreen.js"></script>
 <script src="jspsych-6-2/plugins/jspsych-instructions.js"></script>
 <script src="jspsych-6-2/plugins/jspsych-survey-likert.js"></script>
@@ -147,7 +148,7 @@ counting={
     choices: jsPsych.NO_KEYS,
     trial_duration: 1000,
     on_finish:function(){
-    time1=time1-1
+    time1--
     },
 
 }],
@@ -197,8 +198,9 @@ outcome = {
 /*defining debriefing block*/
 var debrief = {
   type: "html-keyboard-response",
-  stimulus:"<p> Thanks for participating the experiment!</p>",
-  trial_duration:2000,
+  stimulus:"<p> Thanks for participating the experiment and please wait for a moment</p>",
+  choices: jsPsych.NO_KEYS,
+  trial_duration:1500,
   on_start:function () {
     var text = "_";
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -214,8 +216,10 @@ var debrief = {
       jsPsych.data.addProperties({totaltime:totaltime,event:event,trials_event:trials_event,time_event:time_event})
       var ref = firebase.database().ref("participants"+debrief.on_start())
       var rt=jsPsych.data.get().filter({stimulus:"choose a key"}).select('rt').values
+      var ques=jsPsych.data.get().filter({trial_type:"survey-likert"}).select("responses").values
       ref.set({
-          rt_js:rt
+          rt_js:rt,
+          question_js:ques
         })
   }
 };
@@ -226,12 +230,15 @@ timeline.push(trial);
 timeline.push(debrief);
 
 var goodbay={
-  type:"html-keyboard-response",
-  stimulus:"<p> press any key to close the window",
+  type:"html-button-response",
+  stimulus:"<p>The experiment is finished, Please click the button to close the window </p>",
+  choices:['close'],
   on_finish:function(){
     window.close();
-    open(location, '_self').close();
-    }
+    },
+  on_start:function(){
+    document.body.style.cursor = 'initial';
+  }
 }
 
 timeline.push(goodbay)
