@@ -1,24 +1,259 @@
 <!DOCTYPE html>
-<html lang="en">
+
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Experiment</title>
-    <link rel="stylesheet" href="jspsych-6-2\css\jspsych.css" type="text/css" />
-    <script src="jspsych-6-2/jspsych.js"></script>
-    <script src="jspsych-6-2/plugins/jspsych-html-keyboard-response.js"></script>
-    <script src="jspsychr/jspsychr.js"></script>
-    <script src="jspsych-6-2/plugins/jspsych-fullscreen.js"></script>
-    <script src="jspsych-6-2/plugins/jspsych-instructions.js"></script>
-    <script src="jspsych-6-2/plugins/jspsych-survey-likert.js"></script>
-    <script src="jspsych-6-2/plugins/jspsych-survey-text.js"></script>
-    <script src="lodash.js"></script>
-    <script src='jquery.js'></script>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="big name" />
+
+
+<title>Experiment demo</title>
+
+
+
+
+
+
+<link rel="stylesheet" href="jspsych-6-2\css\jspsych.css" type="text/css" />
+
+<script src="jspsych-6-2/jspsych.js"></script>
+<script src="jspsych-6-2/plugins/jspsych-html-keyboard-response.js"></script>
+<script src="jspsychr/jspsychr.js"></script>
+<script src="jspsych-6-2/plugins/jspsych-image-keyboard-response.js"></script>
+<script src="jspsych-6-2/plugins/jspsych-html-button-response.js"></script>
+<script src="jspsych-6-2/plugins/jspsych-fullscreen.js"></script>
+<script src="jspsych-6-2/plugins/jspsych-instructions.js"></script>
+<script src="jspsych-6-2/plugins/jspsych-survey-likert.js"></script>
+</script>
+
+<script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-database.js"></script>
+<script> // Your web app's Firebase configuration
+  var firebaseConfig = {
+  apiKey: "AIzaSyAbwWalDqDAVk72pVB4d94jHMWHXUN8a2w",
+  authDomain: "test2-44e2e.firebaseapp.com",
+  databaseURL: "https://test2-44e2e.firebaseio.com",
+  projectId: "test2-44e2e",
+  storageBucket: "test2-44e2e.appspot.com",
+  messagingSenderId: "633668694672",
+  appId: "1:633668694672:web:48204c2cdbc9ad5640de15",
+  measurementId: "G-T4KEJ5L70X"
+};
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);</script>
 
 
 </head>
-<script src="effort.js"></script>
+
 <body>
-    
+
+
+
+
+<h1 class="title toc-ignore">Experiment demo</h1>
+<h4 class="author">big name</h4>
+
+
+
+
+<script type="text/javascript">
+/* Note this is a js (javascript) code chunk */
+
+var circle='img/circle.jpg';
+var time1=5;
+
+/* experiment parameters time and system information */
+  
+var info=navigator.userAgent.toLowerCase()
+var time=new Date()
+
+jsPsych.data.addProperties({infomation:info,times:time})
+
+
+/* participants id */
+  
+function makeid(){
+    var text = "participants_";
+    var possible = "0123456789";
+    for( var i=0; i < 5; i++ )
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+        text1=text+".csv"
+    return text1;
+  }
+
+var code = makeid();
+
+var timeline = []; 
+/* full screen */ 
+timeline.push({
+    type: 'fullscreen',
+    fullscreen_mode: true
+    });
+
+/* a simple survey */
+
+var scale_1 = [
+  "Strongly Disagree", 
+  "Disagree", 
+  "Neutral", 
+  "Agree", 
+  "Strongly Agree"
+];
+
+var likert_page = {
+  type: 'survey-likert',
+  questions: [
+    {prompt: "少林功夫真的棒.", labels: scale_1},
+    {prompt: "武当派表示不服.", labels: scale_1},
+    {prompt: "let's rock baby",  labels: scale_1}
+  ],
+  randomize_question_order: true
+};
+
+timeline.push(likert_page)
+
+/*set up welcome block*/
+  
+var hello_trial = {
+    type: 'instructions',
+    pages: ["<p style = 'font-size: 20px' > Welcome to the experiment.</p>"+
+    "<div style='float:right'><img src='img/arrow_right.jpg'><br>Press right arrow key to continue</img></div>",
+    "<p style = 'font-size: 20px' >Your task is to freely press <strong>'s'</strong> and <strong>'k'</strong> key on the keyboard when you see 'choose a key' on the screen. </p>" +
+    "<div style='float:right'> <img src='img/arrow_right.jpg'></img><br>Press right arrow key to the next page.</div>"+
+    "<div style='float:left'> <img src='img/arrow_left.jpg'></img><br>Press left arrow key to the previous page.</div>" ,
+    "<p style = 'font-size: 20px' >After the keypress, the outcome may show up on the screen for a short time."+
+    "The outcome includes <strong>'a circle'</strong> or <strong>'nothing'</strong>.</p> " +
+    "<div style='float:right'> <img src='img/arrow_right.jpg'></img><br>Press right arrow key to start the experiment.</div>"+
+    "<div style='float:left'> <img src='img/arrow_left.jpg'></img><br>Press left arrow key to the previous page.</div>"
+    ],
+    on_start: function(){
+        document.body.style.cursor = 'none';
+    },
+    post_trial_gap: 1000
+}
+
+var countingt={
+  timeline:[
+counting={
+    type: 'html-keyboard-response',
+    stimulus: function (){
+      return '<div style="font-size:20px" id="count">The current experiment will start in '+ time1 +' seconds</div>'},
+    choices: jsPsych.NO_KEYS,
+    trial_duration: 1000,
+    on_finish:function(){
+    time1--
+    },
+
+}],
+    repetitions:5
+}
+timeline.push(countingt)
+
+
+
+var trial ={
+timeline:[
+/* defining test timeline */
+  
+fixation ={
+    type: 'html-keyboard-response',
+    stimulus: '<div style="font-size:60px;">+</div>',
+    choices: jsPsych.NO_KEYS,
+    trial_duration: function (){
+    return timef=(Math.random()*(3-1)+1)*1000;
+    }
+},  
+  
+press = {
+    type: 'html-keyboard-response',
+    choices: ["s","k"],
+    response_ends_trial: true,
+    stimulus: "choose a key"
+},
+
+outcome = {
+    type: 'html-keyboard-response',
+    choices: jsPsych.NO_KEYS,
+    stimulus: function (){ 
+        var data = jsPsych.data.get().last(1).values()[0];
+  if (data.key_press==jsPsych.pluginAPI.convertKeyCharacterToKeyCode('s')){
+            return "<img src='"+circle+"'></img>"}
+        else {
+          return " "
+        }
+    },
+    trial_duration: 200}
+],
+  repetitions: 1
+  }
+
+
+/*defining debriefing block*/
+var debrief = {
+  type: "html-keyboard-response",
+  stimulus:"<p> Thanks for participating the experiment and please wait for a moment</p>",
+  choices: jsPsych.NO_KEYS,
+  trial_duration:1500,
+  on_start:function () {
+    var text = "_";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    for( var i=0; i < 5; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    return text;
+  },
+  on_finish:function(){
+    var totaltime=jsPsych.totalTime()
+      var event=jsPsych.data.getInteractionData().event
+      var trials_event=jsPsych.data.getInteractionData().trial
+      var time_event=jsPsych.data.getInteractionData().time
+      jsPsych.data.addProperties({totaltime:totaltime,event:event,trials_event:trials_event,time_event:time_event})
+      var ref = firebase.database().ref("participants"+debrief.on_start())
+      var rt=jsPsych.data.get().filter({stimulus:"choose a key"}).select('rt').values
+      var ques=jsPsych.data.get().filter({trial_type:"survey-likert"}).select("responses").values
+      ref.set({
+          rt_js:rt,
+          question_js:ques
+        })
+  }
+};
+
+/*set up experiment structure*/
+timeline.push(hello_trial);
+timeline.push(trial);
+timeline.push(debrief);
+
+var goodbay={
+  type:"html-button-response",
+  stimulus:"<p>The experiment is finished, Please click the button to close the window </p>",
+  choices:['close'],
+  on_finish:function(){
+    window.close();
+    },
+  on_start:function(){
+    document.body.style.cursor = 'initial';
+  }
+}
+
+timeline.push(goodbay)
+
+/*start experiment*/
+jsPsych.init({
+    timeline: timeline
+});
+</script>
+
+
+
+<!-- code folding -->
+
+
+
 </body>
 </html>
